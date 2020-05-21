@@ -1,11 +1,13 @@
 package me.gon.demobootweb;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,5 +46,22 @@ public class SampleControllerTest {
         this.mockMvc.perform(MockMvcRequestBuilders.get("/hello").param("id",savedPerson.getId().toString()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.content().string("hello keesun"));
+    }
+
+    @Test
+    public void helloStatic() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/index.html"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("hello index")));
+    }
+
+    @Test
+    public void mobileStatic() throws Exception {
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/mobile/index.html"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk( ))
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("mobile index")))
+                .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.CACHE_CONTROL));
     }
 }
