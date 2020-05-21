@@ -28,15 +28,20 @@ public class SampleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    PersonRepository personRepository;
     @Test
     public void hello() throws Exception{
+        Person person = new Person();
+        person.setName("keesun");
+        Person savedPerson = personRepository.save(person);
         /*
         pathVariable
         this.mockMvc.perform(MockMvcRequestBuilders.get("/hello/keesun"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.content().string("hello keesun"));*/
         //requestParam
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/hello").param("name","keesun"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/hello").param("id",savedPerson.getId().toString()))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.content().string("hello keesun"));
     }
